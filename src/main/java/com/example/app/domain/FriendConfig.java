@@ -37,20 +37,19 @@ public class FriendConfig {
 
                 int user_id;
                 JsonNode jsonNode2 = null;
-//                for(Friend friend : friends){
-//                    user_id = friend.getId();
-//                    //System.out.println(user_id);
-//                    url2 = new URL(String.format("https://api.vk.com/method/groups.get?user_id=%s&extended=1&v=5.52&access_token=5f9a6e730a204c59774529615438829fb6b50abf5cf0dad40db223419faf52ceeed17598ade8006a22400", user_id));
-//                    jsonNode2 = objectMapper.readTree(url2);
-//                    String str2 = null;
-//                    JsonNode jn = jsonNode2.get("response");
-//                    if(jn != null){
-//                        groups = objectMapper.convertValue(jn.get("items"), new TypeReference<List<Friend.Group>>(){});
-//                        friend.setGroups(groups);
-//                    }
-//                }
 
-
+                for (Friend friend : friends) {
+                    user_id = friend.getId();
+                    url2 = new URL(String.format("https://api.vk.com/method/users.getSubscriptions?user_id=%s&extended=1&v=5.52&access_token=5f9a6e730a204c59774529615438829fb6b50abf5cf0dad40db223419faf52ceeed17598ade8006a22400", user_id));
+                    jsonNode2 = objectMapper.readTree(url2);
+                    String str2 = null;
+                    JsonNode jn = jsonNode2.get("response");
+                    if (jn != null) {
+                        groups = objectMapper.convertValue(jn.get("items"), new TypeReference<List<Friend.Group>>() {
+                        });
+                        friend.setGroups(groups);
+                    }
+                }
 
                 //System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(friends));
             } catch (MalformedURLException e) {
