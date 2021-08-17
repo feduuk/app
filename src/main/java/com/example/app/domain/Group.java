@@ -29,6 +29,14 @@ public class Group {
     public Group() {
     }
 
+    public Collection<Friend> getFriendsVk() {
+        return friendsVk;
+    }
+
+    public void setFriendsVk(Collection<Friend> friendsVk) {
+        this.friendsVk = friendsVk;
+    }
+
     public int getId() {
         return id;
     }
