@@ -1,5 +1,7 @@
-package com.example.app.domain;
+package com.example.app.domain.services;
 
+import com.example.app.domain.entities.Friend;
+import com.example.app.domain.repositories.FriendRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
