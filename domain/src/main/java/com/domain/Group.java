@@ -10,7 +10,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name="group_vk")
+@Entity(name="groupsVk")
 @Table
 @Data
 @NoArgsConstructor
@@ -25,11 +25,11 @@ public class Group {
     private String activity;
     @Column(columnDefinition="text")
     private String description;
-    @ManyToMany(
-            mappedBy = "groups",
-            fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL
-    )
-    private List<Friend> friends = new ArrayList<>();
+//    @ManyToMany(
+//            mappedBy = "groups",
+//            fetch = FetchType.EAGER,
+//            cascade = CascadeType.ALL
+//    )
+//    private List<Friend> friends = new ArrayList<>();
 
 }
