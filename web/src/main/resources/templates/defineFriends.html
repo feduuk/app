@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Find your friends</title>
+</head>
+<body>
+<h3>Designate your friend's interests:</h3>
+<form method="POST" th:object="${friendModel}">
+    <div th:each="activity : ${activities}">
+        <input name="checkedActivities" type="checkbox" th:value="${activity}"
+        />
+        <span th:text="${activity}">FRIEND'S INTEREST</span><br/>
+    </div>
+    <button>Submit</button>
+</form>
+</body>
+</html>
