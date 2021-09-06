@@ -32,4 +32,5 @@ public class Group {
 //    )
 //    private List<Friend> friends = new ArrayList<>();
 
+
 }

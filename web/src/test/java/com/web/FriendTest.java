@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @SpringBootTest
@@ -33,12 +34,14 @@ class FriendTest {
                 .first_name("josh")
                 .last_name("brown")
                 .groups(Arrays.asList(group1, group3))
+                .updateDate(new Date())
                 .build();
         Friend friend2 = Friend.builder()
                 .id(2)
                 .first_name("mark")
                 .last_name("bush")
                 .groups(Arrays.asList(group2))
+                .updateDate(new Date())
                 .build();
         friendRepository.saveAll(Arrays.asList(friend1, friend2));
 

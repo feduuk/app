@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -26,7 +28,31 @@ public class DefineFriendsController {
 
     @GetMapping("/defineFriends")
     public String defineFriends(Model model){
-        List<String> activities = groupRepository.findActivities();
+        //List<String> activities = groupRepository.findActivities();
+        List<String> activities = new ArrayList<>(Arrays.asList("Автомобили",
+                "Активный отдых",
+                "Бизнес",
+                "Видеоигры",
+                "Дизайн и графика",
+                "Домашние и дикие животные",
+                "Здоровый образ жизни",
+                "Искусство и развлечения",
+                "История",
+                "Киберспорт",
+                "Кино",
+                "Кулинария",
+                "Кулинария, рецепты",
+                "Культура",
+                "Литература",
+                "Музыка",
+                "Наука",
+                "Политика",
+                "Программирование",
+                "Творчество",
+                "Туризм, путешествия",
+                "Философия",
+                "Юмор"
+        ));
 
         FriendModel friendModel = new FriendModel();
         model.addAttribute("activities", activities);

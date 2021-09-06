@@ -1,5 +1,6 @@
 package com.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -54,13 +55,6 @@ public class Friend {
             )
     )
     private List<Group> groups = new ArrayList<>();
-
-    public List<Group> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(List<Group> groups) {
-        this.groups = groups;
-    }
-
+    @JsonIgnore
+    private Date updateDate;
 }

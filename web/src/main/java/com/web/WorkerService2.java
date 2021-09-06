@@ -1,4 +1,4 @@
-package com.storage;
+package com.web;
 
 import com.domain.Friend;
 import com.domain.Group;
@@ -14,7 +14,7 @@ import java.net.URL;
 import java.util.List;
 
 @Service
-public class WorkerService {
+public class WorkerService2 {
     List<Friend> friends;
     public List<Friend> getFriendsFromVk(){
         ObjectMapper objectMapper = new ObjectMapper();

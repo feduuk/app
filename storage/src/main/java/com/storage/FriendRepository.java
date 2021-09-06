@@ -15,18 +15,13 @@ public interface FriendRepository extends JpaRepository<Friend, Integer> {
             nativeQuery = true
     )
     List<Integer> findFriendsIdByGroupActivity(@Param("activities") List<String> activities);
+    @Query(
+            value = "SELECT id FROM friend;",
+            nativeQuery = true
+    )
+    List<Integer> findAllId();
+    Friend findById(int id);
 
-//    @Query(
-//            value = "SELECT DISTINCT friend.id FROM friend JOIN friend_group ON friend.id = friend_group.friend_id JOIN groups_vk ON friend_group.group_id = groups_vk.id WHERE activity IN ('Творчество');",
-//            nativeQuery = true
-//    )
-//    List<Integer> findFriendsIdByGroupActivity();
 
-
-//    @Query(
-//            value = "SELECT DISTINCT friend.id FROM friend JOIN friend_group ON friend.id = friend_group.friend_id JOIN groups_vk ON friend_group.group_id = groups_vk.id WHERE activity = ?1",
-//            nativeQuery = true
-//    )
-//    List<Integer> findFriendsByGroupActivity(String activities);
 
 }
