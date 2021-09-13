@@ -29,13 +29,20 @@ public class WorkerService {
         this.friendRepository = friendRepository;
     }
 
+    private long getUpdatedTimeDiffForCurrentFriend(Friend friendInDb) {
+        Date date = friendInDb.getUpdateDate();
+        Date nowDate = new Date();
+        long diffInMillies = nowDate.getTime() - date.getTime();
+        return TimeUnit.HOURS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    }
+
     public List<Friend> getFriendsFromVk(String token){
         List<Friend> friends;
         List<Friend> friendsForSaving = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         URL url1 = null;
-        List<Group> groups = null;
+
         String fullInfo = String.format("https://api.vk.com/method/friends.get?count=20&fields=sex,bdate,occupation&v=5.100&access_token=%s", token);
         List<Integer> ids = new ArrayList<>();
         try {
@@ -47,35 +54,29 @@ public class WorkerService {
                 ids.add(friend.getId());
             }
             List<Integer> idsInDB = friendRepository.findAllId();
-            for(Friend friend : friends){
-                int id = friend.getId();
-                Friend friendInDb = friendRepository.findById(id);
-                if(friendInDb != null){
-                    System.out.println("!! in db");
-                    Date date = friendInDb.getUpdateDate();
-                    Date nowDate = new Date();
-                    long diffInMillies = nowDate.getTime() - date.getTime();
-                    long diff = TimeUnit.HOURS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-                    if(diff < 24){
-                        System.out.println("!! update is not needed");
-                        continue;
-                    }else{
-                        System.out.println("!! need update");
+
+            friends.forEach(friend -> {
+                try {
+                    List<Group> groups = null;
+                    Friend friendInDb = friendRepository.findById(friend.getId());
+                    if (friendInDb == null || getUpdatedTimeDiffForCurrentFriend(friendInDb) > 24) {
+                        URL url2 = new URL(String.format("https://api.vk.com/method/users.getSubscriptions?fields=activity,description&user_id=%s&extended=1&v=5.52&access_token=%s", friend.getId(), token));
+                        JsonNode jsonNode2 = objectMapper.readTree(url2);
+                        JsonNode jn = jsonNode2.get("response");
+                        if (jn != null) {
+                            groups = objectMapper.convertValue(jn.get("items"), new TypeReference<List<Group>>() {
+                            });
+                            friend.setGroups(groups);
+                        }
+                        friend.setUpdateDate(new Date());
+                        friendsForSaving.add(friend);
                     }
-                }else{
-                    System.out.println("!! not in db");
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }catch (IOException e) {
+                    e.printStackTrace();
                 }
-                URL url2 = new URL(String.format("https://api.vk.com/method/users.getSubscriptions?fields=activity,description&user_id=%s&extended=1&v=5.100&access_token=%s", id, token));
-                JsonNode jsonNode2 = objectMapper.readTree(url2);
-                JsonNode jn = jsonNode2.get("response");
-                if (jn != null) {
-                    groups = objectMapper.convertValue(jn.get("items"), new TypeReference<List<Group>>() {});
-                    friend.setGroups(groups);
-                }
-                friend.setUpdateDate(new Date());
-                friendsForSaving.add(friend);
-            }
-            //System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(friends));
+            });
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }catch (IOException e) {

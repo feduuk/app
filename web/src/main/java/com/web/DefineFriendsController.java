@@ -71,6 +71,8 @@ public class DefineFriendsController {
 //    }
 
 
+
+
     @GetMapping(value="/processCode")
     public String processCode(@RequestParam String code){
         log.info("!defineFriends");
