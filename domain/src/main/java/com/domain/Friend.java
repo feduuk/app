@@ -22,23 +22,6 @@ public class Friend {
     private int id;
     private String first_name;
     private String last_name;
-//    private int sex;
-//    private String bdate;
-//    @Column(columnDefinition="text")
-//    private String interests;
-//    @Column(columnDefinition="text")
-//    private String books;
-//    @Column(columnDefinition="text")
-//    private String tv;
-//    private String about;
-//    @Column(columnDefinition="text")
-//    private String games;
-//    @Column(columnDefinition="text")
-//    private String movies;
-//    @Column(columnDefinition="text")
-//    private String activities;
-//    @Column(columnDefinition="text")
-//    private String music;
     @ManyToMany(
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL

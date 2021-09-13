@@ -25,12 +25,5 @@ public class Group {
     private String activity;
     @Column(columnDefinition="text")
     private String description;
-//    @ManyToMany(
-//            mappedBy = "groups",
-//            fetch = FetchType.EAGER,
-//            cascade = CascadeType.ALL
-//    )
-//    private List<Friend> friends = new ArrayList<>();
-
 
 }
