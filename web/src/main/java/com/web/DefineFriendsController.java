@@ -1,13 +1,12 @@
 package com.web;
 
-import com.domain.Friend;
-import com.storage.FriendRepository;
-import com.storage.GroupRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -18,27 +17,22 @@ import java.util.List;
 @Controller
 @RequestMapping
 public class DefineFriendsController {
-    private final GroupRepository groupRepository;
-    private final FriendRepository friendRepository;
-    private final WorkerService workerService;
+    @Autowired
+    private WorkerService workerService;
 
     VkResponse response;
 
     @Autowired
     private RestTemplate restTemplate;
 
-    @Autowired
-    public DefineFriendsController(GroupRepository groupRepository, FriendRepository friendRepository, WorkerService workerService) {
-        this.groupRepository = groupRepository;
-        this.friendRepository = friendRepository;
-        this.workerService = workerService;
-    }
+
 
     @GetMapping("/defineFriends")
     public String defineFriends(Model model){
         //List<String> activities = groupRepository.findActivities();
         String token = "e8d5e2366e9cca21f7c83ba93088e7118efd53f8a01f2576d94b3b8e6127b0d522c75a496eb4e8ff638b4";
-        friendRepository.saveAll(workerService.getFriendsFromVk(token));
+        workerService.getFriendsFromVk(token);
+        //friendRepository.saveAll(workerService.getFriendsFromVk(token));
         List<String> activities = new ArrayList<>(Arrays.asList("Автомобили",
                 "Активный отдых",
                 "Бизнес",

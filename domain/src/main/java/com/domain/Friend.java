@@ -38,6 +38,6 @@ public class Friend {
             )
     )
     private List<Group> groups = new ArrayList<>();
-    @JsonIgnore
+    @Column(columnDefinition = "timestamptz")
     private Date updateDate;
 }

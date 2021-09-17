@@ -6,27 +6,51 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.storage.FriendRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+
 @Service
 public class WorkerService {
-
-    FriendRepository friendRepository;
-
     @Autowired
-    public WorkerService(FriendRepository friendRepository) {
-        this.friendRepository = friendRepository;
+    private RestTemplate restTemplate;
+
+    public Friend getFriend(int id){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        HttpEntity<String> entity = new HttpEntity<String>(headers);
+        Friend friend = restTemplate.exchange("http://localhost:8081/storage/getFriend/{id}", HttpMethod.GET, entity, Friend.class, id).getBody();
+        return friend;
+    }
+
+    public List<Friend> getAllFriends(){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        HttpEntity<String> entity = new HttpEntity<String>(headers);
+        Friend[] friends = restTemplate.exchange("http://localhost:8081/storage/getAllFriends", HttpMethod.GET, entity, Friend[].class).getBody();
+        return Arrays.asList(friends);
+    }
+
+    public String saveAllFriends(List<Friend> friends){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        HttpEntity<List<Friend>> entity = new HttpEntity<>(friends, headers);
+        String friendsFromPost = restTemplate.postForObject("http://localhost:8081/storage/saveAllFriends", entity, String.class);
+        return friendsFromPost;
     }
 
     private long getUpdatedTimeDiffForCurrentFriend(Friend friendInDb) {
@@ -36,7 +60,9 @@ public class WorkerService {
         return TimeUnit.HOURS.convert(diffInMillies, TimeUnit.MILLISECONDS);
     }
 
-    public List<Friend> getFriendsFromVk(String token){
+
+
+    public void getFriendsFromVk(String token){
         List<Friend> friends;
         List<Friend> friendsForSaving = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -44,21 +70,16 @@ public class WorkerService {
         URL url1 = null;
 
         String fullInfo = String.format("https://api.vk.com/method/friends.get?count=20&fields=sex,bdate,occupation&v=5.100&access_token=%s", token);
-        List<Integer> ids = new ArrayList<>();
         try {
             url1 = new URL(fullInfo);
             JsonNode jsonNode1 = objectMapper.readTree(url1);
             String str1 = jsonNode1.get("response").get("items").toString();
             friends = objectMapper.readValue(str1, new TypeReference<List<Friend>>(){});
-            for(Friend friend : friends){
-                ids.add(friend.getId());
-            }
-            List<Integer> idsInDB = friendRepository.findAllId();
 
             friends.forEach(friend -> {
                 try {
                     List<Group> groups = null;
-                    Friend friendInDb = friendRepository.findById(friend.getId());
+                    Friend friendInDb = getFriend(friend.getId());
                     if (friendInDb == null || getUpdatedTimeDiffForCurrentFriend(friendInDb) > 24) {
                         URL url2 = new URL(String.format("https://api.vk.com/method/users.getSubscriptions?fields=activity,description&user_id=%s&extended=1&v=5.100&access_token=%s", friend.getId(), token));
                         JsonNode jsonNode2 = objectMapper.readTree(url2);
@@ -68,6 +89,8 @@ public class WorkerService {
                             friend.setGroups(groups);
                         }
                         friend.setUpdateDate(new Date());
+                        System.out.print("date: ");
+                        System.out.println(friend.getUpdateDate());
                         friendsForSaving.add(friend);
                     }
                 } catch (MalformedURLException e) {
@@ -81,7 +104,7 @@ public class WorkerService {
         }catch (IOException e) {
             e.printStackTrace();
         }
-        return friendsForSaving;
+        saveAllFriends(friendsForSaving);
     }
 
 

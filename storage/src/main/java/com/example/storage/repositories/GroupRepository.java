@@ -1,4 +1,4 @@
-package com.storage;
+package com.example.storage.repositories;
 
 import com.domain.Group;
 import org.springframework.data.jpa.repository.JpaRepository;

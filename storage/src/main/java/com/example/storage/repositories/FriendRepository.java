@@ -1,4 +1,5 @@
-package com.storage;
+package com.example.storage.repositories;
+
 
 import com.domain.Friend;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +16,11 @@ public interface FriendRepository extends JpaRepository<Friend, Integer> {
             nativeQuery = true
     )
     List<Integer> findFriendsIdByGroupActivity(@Param("activities") List<String> activities);
+    @Query(
+            value = "SELECT DISTINCT friend.id, friend.first_name, friend.last_name, friend.update_date FROM friend JOIN friend_group ON friend.id = friend_group.friend_id JOIN groups_vk ON friend_group.group_id = groups_vk.id WHERE activity IN (:activities);",
+            nativeQuery = true
+    )
+    List<Friend> findFriendsByGroupActivity(@Param("activities") List<String> activities);
     @Query(
             value = "SELECT id FROM friend;",
             nativeQuery = true

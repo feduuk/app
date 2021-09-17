@@ -23,7 +23,4 @@ public class Group {
     @JsonProperty("name")
     private String groupName;
     private String activity;
-    @Column(columnDefinition="text")
-    private String description;
-
 }
