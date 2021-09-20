@@ -3,11 +3,12 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Friend Cloud</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 </head>
 <body>
+<div class="border border-primary text-center">
 <h1>Welcome</h1>
-<a href="defineFriends">Find your friends!!!</a>
-<!--<a href="https://oauth.vk.com/authorize?client_id=7914980&display=page&redirect_uri=http://34.136.208.204:8080/processCode&scope=friends,groups,offline&response_type=code&v=5.100">Log in!!!</a>-->
-
+<a th:href="${@environment.getProperty('my.value.home.link')}">Find your friends!!!</a>
+</div>
 </body>
 </html>

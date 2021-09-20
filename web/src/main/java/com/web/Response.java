@@ -1,6 +1,6 @@
 package com.web;
 
-import com.domain.Friend;
+import com.web.domain.Friend;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

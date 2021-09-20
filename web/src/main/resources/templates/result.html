@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+</head>
+<body>
+<h2 th:if="${checkedActivities == null or checkedActivities.size == 0}">You didn't choose any activities!</h2>
+<div th:unless="${checkedActivities == null or checkedActivities.size == 0}">
+    <ol class="list-group list-group-numbered">
+        <li class="list-group-item" th:each="response : ${#lists.sort(responses, responseComparator)}"
+            th:if="${response.activities.size()>0}">
+            <a th:href="${'https://vk.com/id' + response.friend.id}">
+                <span th:text="${response.friend.first_name + ' ' + response.friend.last_name}">first_name</span>
+            </a>
+            <span th:text=" ${response.activities.size() + '/' + checkedActivities.size()}"></span>
+            <ul class="list-group">
+                <li class="list-group-item" th:each="activity : ${response.activities}">
+                    <details>
+                        <summary>
+                            <span th:text="${activity}">activity</span>
+                        </summary>
+                        <ul class="list-group">
+                            <li class="list-group-item" th:each="group : ${response.friend.groups}"
+                                th:if="${group.activity == activity}">
+                                <a th:href="${'https://vk.com/' + group.screen_name}">
+                                    <span th:text="${group.groupName}">groupName</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </details>
+                </li>
+            </ul>
+        </li>
+    </ol>
+</div>
+</body>
+</html>

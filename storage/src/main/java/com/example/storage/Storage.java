@@ -1,6 +1,6 @@
 package com.example.storage;
 
-import com.domain.Friend;
+import com.example.storage.domain.Friend;
 import com.example.storage.repositories.FriendRepository;
 import com.example.storage.repositories.GroupRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +19,6 @@ public class Storage {
     private FriendRepository friendRepository;
 
 
-
-
     @GetMapping("/getFriend/{id}")
     public Friend getFriend(@PathVariable int id){
         return friendRepository.findById(id);
@@ -30,17 +28,12 @@ public class Storage {
         return friendRepository.findAll();
     }
 
-
     @PostMapping("/saveFriend")
     public Friend saveFriend(@RequestBody Friend friend){
         return friendRepository.save(friend);
     }
     @PostMapping("/saveAllFriends")
     public List<Friend> saveAllFriends(@RequestBody List<Friend> friends){
-        for(Friend friend : friends){
-            log.info("date: " + friend.getUpdateDate());
-        }
         return friendRepository.saveAll(friends);
     }
-
 }
