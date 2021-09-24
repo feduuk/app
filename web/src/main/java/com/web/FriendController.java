@@ -6,17 +6,16 @@ import com.web.domain.Group;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Controller
@@ -30,22 +29,16 @@ public class FriendController {
     @Value("${my.value.host.storage.link}")
     String storageHost;
 
-    public List<Friend> getAllFriends(){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        HttpEntity<String> entity = new HttpEntity<String>(headers);
-        Friend[] friends = restTemplate.exchange(String.format("%s/storage/getAllFriends", storageHost), HttpMethod.GET, entity, Friend[].class).getBody();
-        return Arrays.asList(friends);
-    }
-
     @PostMapping("/info")
     public String getInfo(FriendModel friendModel, Boolean actuality, String token, Model model) {
         log.info("getInfo method of FriendController");
         log.info("Activities were chosen: " + friendModel);
+        if(token == null){
+            return "home";
+        }
         if(actuality == null) actuality = false;
-        workerService.saveDataFromVk(token, actuality);
         List<String> checkedActivities = friendModel.getCheckedActivities();
-        List<Friend> friends = getAllFriends();
+        List<Friend> friends = workerService.getDataFromVk(token, actuality);
         List<Response> responses = new ArrayList<>();
         friends.forEach(friend ->{
             Response response = new Response();

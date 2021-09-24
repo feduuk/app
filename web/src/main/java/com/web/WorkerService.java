@@ -35,6 +35,8 @@ public class WorkerService {
     String storageHost;
     @Value("${my.value.vk.version}")
     String vkVersion;
+    @Value("${my.value.friends.count}")
+    int count;
 
     public Friend getFriend(int id) {
         HttpHeaders headers = new HttpHeaders();
@@ -77,11 +79,11 @@ public class WorkerService {
         return groups;
     }
 
-    public void saveDataFromVk(String token, boolean actuality) {
-        List<Friend> friends;
+    public List<Friend> getDataFromVk(String token, boolean actuality) {
+        List<Friend> friends = null;
         List<Friend> friendsForSaving = new ArrayList<>();
         try {
-            URL url1 = new URL(String.format("https://api.vk.com/method/friends.get?fields=sex,bdate&v=%s&access_token=%s", vkVersion, token));
+            URL url1 = new URL(String.format("https://api.vk.com/method/friends.get?count=%d&fields=sex,bdate&v=%s&access_token=%s", count, vkVersion, token));
             JsonNode jsonNode1 = objectMapper.readTree(url1);
             String str1 = jsonNode1.get("response").get("items").toString();
             friends = objectMapper.readValue(str1, new TypeReference<List<Friend>>() {});
@@ -98,6 +100,8 @@ public class WorkerService {
                         friend.setGroups(getGroupsFromVk(friend.getId(), token));
                         friend.setUpdateDate(new Date());
                         friendsForSaving.add(friend);
+                    }else{
+                        friend.setGroups(friendInDb.getGroups());
                     }
                 }
             }
@@ -107,5 +111,6 @@ public class WorkerService {
             e.printStackTrace();
         }
         saveAllFriends(friendsForSaving);
+        return friends;
     }
 }

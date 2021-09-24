@@ -23,8 +23,7 @@
                             <span th:text="${activity}">activity</span>
                         </summary>
                         <ul class="list-group">
-                            <li class="list-group-item" th:each="group : ${response.friend.groups}"
-                                th:if="${group.activity == activity}">
+                            <li class="list-group-item" th:each="group : ${response.friend.groups}" th:if="${group.activity == activity}">
                                 <a th:href="${'https://vk.com/' + group.screen_name}">
                                     <span th:text="${group.groupName}">groupName</span>
                                 </a>
