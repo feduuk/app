@@ -5,13 +5,12 @@ import com.web.domain.Friend;
 import com.web.domain.Group;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -23,16 +22,12 @@ import java.util.Set;
 public class FriendController {
     @Autowired
     private WorkerService workerService;
-    @Autowired
-    private RestTemplate restTemplate;
-
-    @Value("${my.value.host.storage.link}")
-    String storageHost;
 
     @PostMapping("/info")
-    public String getInfo(FriendModel friendModel, Boolean actuality, String token, Model model) {
+    public String getInfo(FriendModel friendModel, Boolean actuality, Model model, HttpSession session) {
         log.info("getInfo method of FriendController");
         log.info("Activities were chosen: " + friendModel);
+        String token = ((VkResponse)session.getAttribute("vkResponse")).getAccess_token();
         if(token == null){
             return "home";
         }

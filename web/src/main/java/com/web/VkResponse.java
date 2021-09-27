@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VkResponse {
-    String access_token;
-    String expires_in;
-    String user_id;
+    private String access_token;
+    private String expires_in;
+    private String user_id;
 }

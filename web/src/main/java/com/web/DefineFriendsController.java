@@ -5,14 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,17 +18,17 @@ import java.util.Map;
 
 @Slf4j
 @Controller
-@RequestMapping
+@SessionAttributes("vkResponse")
 public class DefineFriendsController {
     @Autowired
     private WorkerService workerService;
     @Autowired
     private RestTemplate restTemplate;
 
-    @Value("${my.value.vk.token}")
-    String token;
-    @Value("${my.value.my.vk.id}")
-    String vkId;
+//    @Value("${my.value.vk.token}")
+//    String token;
+//    @Value("${my.value.my.vk.id}")
+//    String vkId;
 
     @Value("${my.value.vk.app.id}")
     String appId;
@@ -39,18 +37,27 @@ public class DefineFriendsController {
     @Value("${my.value.host.web.link}")
     String webLink;
 
+    @ModelAttribute("vkResponse")
+    public VkResponse vkResponse() {
+        return new VkResponse();
+    }
 
     @GetMapping(value="/processCode")
-    public String processCode(@RequestParam String code, RedirectAttributes redirectAttributes){
+    public String processCode(@RequestParam String code, @ModelAttribute("vkResponse") VkResponse vkResponse, Model model){
         log.info("process code method of DefineFriendsController");
-        VkResponse vkResponse = restTemplate.getForObject(String.format("https://oauth.vk.com/access_token?client_id=%s&client_secret=%s&redirect_uri=%s/processCode&code=%s", appId, appSecretKey, webLink, code), VkResponse.class);
-        redirectAttributes.addFlashAttribute("vkResponse", vkResponse);
+        vkResponse = restTemplate.getForObject(String.format("https://oauth.vk.com/access_token?client_id=%s&client_secret=%s&redirect_uri=%s/processCode&code=%s", appId, appSecretKey, webLink, code), VkResponse.class);
+        model.addAttribute(vkResponse);
         return "redirect:defineFriends";
     }
 
     @GetMapping(value="/defineFriends")
     public String defineFriends(Model model, @ModelAttribute("vkResponse") VkResponse vkResponse){
         log.info("defineFriends method of DefineFriendsController");
+
+//        vkResponse.setAccess_token(token);
+//        vkResponse.setUser_id(vkId);
+//        model.addAttribute(vkResponse);
+
         if(vkResponse.getAccess_token() == null){
             return "home";
         }
@@ -78,10 +85,6 @@ public class DefineFriendsController {
                 "Философия",
                 "Юмор"
         ));
-//        VkResponse vkResponse = new VkResponse();
-//        vkResponse.setAccess_token(token);
-//        vkResponse.setUser_id(vkId);
-//        model.addAttribute(vkResponse);
         model.addAttribute("activities", activities);
         return "defineFriends";
     }
