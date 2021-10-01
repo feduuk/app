@@ -1,0 +1,15 @@
+@startuml
+class friend{
+
+}
+class friend_group{
+
+}
+class groups_vk{
+
+}
+
+JpaRepository <|-- FriendRepository
+JpaRepository <|-- GroupRepository
+
+@enduml
