@@ -26,5 +26,6 @@ public class Group {
     private String groupName;
     @Column(columnDefinition = "text")
     private String activity;
-    private String screen_name;
+    @JsonProperty("screen_name")
+    private String screenName;
 }

@@ -41,7 +41,7 @@ public class WorkerService {
     public Friend getFriend(int id) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        HttpEntity<String> entity = new HttpEntity<String>(headers);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
         Friend friend = restTemplate.exchange(String.format("%s/storage/getFriend/{id}", storageHost), HttpMethod.GET, entity, Friend.class, id).getBody();
         return friend;
     }
@@ -87,7 +87,7 @@ public class WorkerService {
             JsonNode jsonNode1 = objectMapper.readTree(url1);
             String str1 = jsonNode1.get("response").get("items").toString();
             friends = objectMapper.readValue(str1, new TypeReference<List<Friend>>() {});
-            if(actuality == true){
+            if(actuality){
                 for(Friend friend : friends){
                     friend.setGroups(getGroupsFromVk(friend.getId(), token));
                     friend.setUpdateDate(new Date());

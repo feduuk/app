@@ -2,7 +2,6 @@ package com.web;
 
 
 import com.web.domain.Friend;
-import com.web.domain.Group;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,7 +26,8 @@ public class FriendController {
     public String getInfo(FriendModel friendModel, Boolean actuality, Model model, HttpSession session) {
         log.info("getInfo method of FriendController");
         log.info("Activities were chosen: " + friendModel);
-        String token = ((VkResponse)session.getAttribute("vkResponse")).getAccess_token();
+        boolean foundAtLeastOneChatmate = false;
+        String token = ((VkResponse)session.getAttribute("vkResponse")).getAccessToken();
         if(token == null){
             return "home";
         }
@@ -35,24 +35,26 @@ public class FriendController {
         List<String> checkedActivities = friendModel.getCheckedActivities();
         List<Friend> friends = workerService.getDataFromVk(token, actuality);
         List<Response> responses = new ArrayList<>();
-        friends.forEach(friend ->{
+        for(Friend friend : friends){
             Response response = new Response();
             response.setFriend(friend);
             List<String> checkedActivitiesOfFriend = new ArrayList<>();
             Set<String> activitiesOfFriend = new HashSet<>();
-            for(Group group : friend.getGroups()){
+            friend.getGroups().forEach(group -> {
                 activitiesOfFriend.add(group.getActivity());
-            }
+            });
             if(checkedActivities != null){
-                checkedActivities.forEach(activity ->{
+                for(String activity : checkedActivities){
                     if(activitiesOfFriend.contains(activity)){
                         checkedActivitiesOfFriend.add(activity);
+                        foundAtLeastOneChatmate = true;
                     }
-                });
+                }
             }
             response.setActivities(checkedActivitiesOfFriend);
             responses.add(response);
-        });
+        }
+        model.addAttribute("foundAtLeastOneChatmate", foundAtLeastOneChatmate);
         model.addAttribute("responses", responses);
         model.addAttribute("responseComparator", new ResponseComparator());
         model.addAttribute("checkedActivities", checkedActivities);

@@ -1,5 +1,6 @@
 package com.example.storage.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,8 +22,10 @@ public class Friend {
     @Id
     @Column
     private int id;
-    private String first_name;
-    private String last_name;
+    @JsonProperty("first_name")
+    private String firstName;
+    @JsonProperty("last_name")
+    private String lastName;
     @ManyToMany(
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL

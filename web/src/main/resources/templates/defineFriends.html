@@ -6,14 +6,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 </head>
 <body>
-<a class="border border-primary" style="text-decoration:none;" th:href="'https://vk.com/id' + ${vkResponse.user_id}">Your vk link</a>
+<a class="border border-primary" style="text-decoration:none;" th:href="'https://vk.com/id' + ${vkResponse.userId}">Your vk link</a>
 <h3>Designate your friend's interests:</h3>
 <form method="POST" action="info">
     <div class="form-check" th:each="activity : ${activities}">
         <input class="form-check-input" id="inputForActivities" name="checkedActivities" type="checkbox" th:value="${activity}"/>
         <label class="form-check-label" for="inputForActivities" th:text="${activity}">FRIEND'S INTEREST</label><br/>
     </div>
-<!--    <input type="hidden" name="token" th:value="${vkResponse.access_token}">-->
     <button class="btn btn-primary">Submit</button><br/>
     <input id="new" name="actuality" type="checkbox" value="true"/>
     <label for="new" >Reload data from vk</label><br/>

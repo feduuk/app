@@ -20,8 +20,6 @@ import java.util.List;
 @SessionAttributes("vkResponse")
 public class DefineFriendsController {
     @Autowired
-    private WorkerService workerService;
-    @Autowired
     private RestTemplate restTemplate;
 
 //    @Value("${my.value.vk.token}")
@@ -53,11 +51,11 @@ public class DefineFriendsController {
     public String defineFriends(Model model, @ModelAttribute("vkResponse") VkResponse vkResponse){
         log.info("defineFriends method of DefineFriendsController");
 
-//        vkResponse.setAccess_token(token);
-//        vkResponse.setUser_id(vkId);
+//        vkResponse.setAccessToken(token);
+//        vkResponse.setUserId(vkId);
 //        model.addAttribute(vkResponse);
 
-        if(vkResponse.getAccess_token() == null){
+        if(vkResponse.getAccessToken() == null){
             return "home";
         }
         List<String> activities = new ArrayList<>(Arrays.asList("Автомобили",

@@ -22,7 +22,6 @@ class AppApplication{
 }
 
 class DefineFriendsController {
-    - workerService: WorkerService
     - restTemplate: RestTemplate
     appId: String
     appSecretKey: String
@@ -84,5 +83,6 @@ interface Comparator<T>{
 }
 
 Comparator <|.. ResponseComparator
-
+FriendController o-- WorkerService
+Response o-- Friend
 @enduml

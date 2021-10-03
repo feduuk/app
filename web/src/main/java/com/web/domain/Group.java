@@ -14,5 +14,6 @@ public class Group {
     @JsonProperty("name")
     private String groupName;
     private String activity;
-    private String screen_name;
+    @JsonProperty("screen_name")
+    private String screenName;
 }

@@ -8,12 +8,13 @@
 </head>
 <body>
 <h2 th:if="${checkedActivities == null or checkedActivities.size == 0}">You didn't choose any activities!</h2>
+<h2 th:if="${checkedActivities != null and checkedActivities.size > 0 and foundAtLeastOneChatmate == false}">There is no one with such activities!</h2>
 <div th:unless="${checkedActivities == null or checkedActivities.size == 0}">
     <ol class="list-group list-group-numbered">
         <li class="list-group-item" th:each="response : ${#lists.sort(responses, responseComparator)}"
             th:if="${response.activities.size()>0}">
             <a th:href="${'https://vk.com/id' + response.friend.id}">
-                <span th:text="${response.friend.first_name + ' ' + response.friend.last_name}">first_name</span>
+                <span th:text="${response.friend.firstName + ' ' + response.friend.lastName}">first_name</span>
             </a>
             <span th:text=" ${response.activities.size() + '/' + checkedActivities.size()}"></span>
             <ul class="list-group">
@@ -24,7 +25,7 @@
                         </summary>
                         <ul class="list-group">
                             <li class="list-group-item" th:each="group : ${response.friend.groups}" th:if="${group.activity == activity}">
-                                <a th:href="${'https://vk.com/' + group.screen_name}">
+                                <a th:href="${'https://vk.com/' + group.screenName}">
                                     <span th:text="${group.groupName}">groupName</span>
                                 </a>
                             </li>

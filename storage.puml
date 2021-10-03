@@ -40,7 +40,8 @@ class Storage{
 class StorageApplication{
     + {static}  main(String[] args): void
 }
-
+Storage o-- GroupRepository
+Storage o-- FriendRepository
 JpaRepository <|-- FriendRepository
 JpaRepository <|-- GroupRepository
 
