@@ -10,5 +10,5 @@ https://github.com/feduuk/app/blob/d26a3012b03257f7ab728424794656858a967af0/web/
 
 SIDENOTE:
   Programm considers only 30 friends from given VK account because returning info about friends and their groups takes big ammount of time.
-  Change max number of friends to consider can be done here:
+  Changing max number of friends to consider can be done here:
   https://github.com/feduuk/app/blob/d26a3012b03257f7ab728424794656858a967af0/web/src/main/resources/application.properties#L9
