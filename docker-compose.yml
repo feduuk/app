@@ -7,22 +7,15 @@ services:
       ports:
          - "8080:8080"
       depends_on:
+         - storage-1
+   storage-1:
+      image: storage
+      networks:
+         - demonet-1
+      ports:
+         - "8081:8081"
+      depends_on:
          - postgres-1
-#         - domain-1
-#         - storage-1
-#   storage-1:
-#      image: storage
-#      networks:
-#         - demonet-1
-#      depends_on:
-#         - postgres-1
-#         - domain-1
-#   domain-1:
-#      image: domain
-#      networks:
-#         - demonet-1
-#      depends_on:
-#         - postgres-1
    postgres-1:
       image: postgres
       networks:

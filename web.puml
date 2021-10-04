@@ -1,0 +1,88 @@
+@startuml
+class Friend{
+    - id: int
+    - first_name: String
+    - last_name: String
+    - groups: List<Group>
+    - updateDate: Date
+}
+note top: @Data\n@NoArgsConstructor\n@AllArgsConstructor
+
+class Group{
+    - id: int
+    - groupName: String
+    - activity: String
+    - screen_name: String
+}
+note top: @Data\n@NoArgsConstructor\n@AllArgsConstructor
+
+class AppApplication{
+    + {static}  main(String[] args): void
+    + restTemplate(): RestTemplate
+}
+
+class DefineFriendsController {
+    - restTemplate: RestTemplate
+    appId: String
+    appSecretKey: String
+    webLink: String
+    + vkResponse(): VkResponse
+    + processCode(String code, VkResponse vkResponse, Model model): String
+    + defineFriends(Model model, VkResponse vkResponse): String
+}
+
+class FriendController {
+    - workerService: WorkerService
+    + getInfo(FriendModel friendModel, Boolean actuality, Model model, HttpSession session): String
+}
+
+class FriendModel {
+    - checkedActivities: List<String>
+}
+note top: @Data
+
+class HomeController {
+    + home(): String
+}
+
+class Response {
+    - friend: Friend
+    - activities: List<String>
+}
+note top: @Data\n@NoArgsConstructor\n@AllArgsConstructor
+
+class ResponseComparator {
+    + compare(Response o1, Response o2): int
+}
+
+class VkResponse {
+     - access_token: String
+     - expires_in: String
+     - String user_id: String
+}
+note top: @Data\n@NoArgsConstructor\n@AllArgsConstructor
+
+
+class WorkerService {
+     - restTemplate: RestTemplate
+     - objectMapper: ObjectMapper
+     storageHost: String
+     vkVersion: String
+     count: int
+
+     + getFriend(int id): Friend
+     + saveAllFriends(List<Friend> friends): String
+     + getUpdatedTimeDiffForCurrentFriend(Friend friendInDb): long
+     + getGroupsFromVk(int id, String token): List<Group>
+     + getDataFromVk(String token, boolean actuality): List<Friend>
+
+
+}
+interface Comparator<T>{
+
+}
+
+Comparator <|.. ResponseComparator
+FriendController o-- WorkerService
+Response o-- Friend
+@enduml

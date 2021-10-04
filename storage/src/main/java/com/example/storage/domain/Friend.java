@@ -1,13 +1,15 @@
-package com.domain;
+package com.example.storage.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table
@@ -20,8 +22,10 @@ public class Friend {
     @Id
     @Column
     private int id;
-    private String first_name;
-    private String last_name;
+    @JsonProperty("first_name")
+    private String firstName;
+    @JsonProperty("last_name")
+    private String lastName;
     @ManyToMany(
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL

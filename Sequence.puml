@@ -1,0 +1,61 @@
+@startuml
+'title app
+'header feduk
+'footer feduk
+actor user
+control HomeController
+boundary home
+participant "VK API" as vk #cyan
+control DefineFriendsController as dfc
+boundary defineFriends
+control FriendController
+participant WorkerService
+participant Storage #yellow
+participant FriendRepository #yellow
+database friend
+boundary result
+
+user -> HomeController ++: GET /
+HomeController -> home --++: go to view home
+home -> vk --++: GET /authorize
+note right : get code
+vk -> dfc --++: redirect /processCode
+vk <- dfc --++: GET /access_token
+vk -> dfc --++: return token
+note right : change code for token
+dfc -> dfc : redirect /defineFriends
+dfc -> defineFriends --++:go to view defineFriends
+defineFriends -> defineFriends : select activities
+note left : form
+defineFriends -> FriendController --++: POST /info
+FriendController -> WorkerService --++: getDataFromVk()
+vk <- WorkerService --++: GET /method/friends.get
+vk -> WorkerService --++: return friends
+
+group 'Reload data from vk' checkbox is checked
+    loop for friends
+        vk <- WorkerService --++: getGroupsFromVk()\nGET /method/users.getSubscriptions
+        vk -> WorkerService --++: return groups
+    end
+else 'Reload data from vk' checkbox isn't checked
+    loop for friends
+        WorkerService -> Storage --++: /storage/getFriend/{id}
+        Storage -> FriendRepository --++: getFriend()
+        FriendRepository -> friend --++: findById()
+        FriendRepository <- friend --++:
+        Storage <- FriendRepository --++:
+        WorkerService <- Storage --++: return friendInDb with groups
+        group if friend isn't in database or data have more than 24 hours time period
+            vk <- WorkerService --++: getGroupsFromVk()\nGET /method/users.getSubscriptions
+            vk -> WorkerService --++: return groups
+        end
+    end
+end
+WorkerService --> Storage --++: saveAllFriends()\nPOST /storage/saveAllFriends
+Storage --> FriendRepository --++: saveAllFriends()
+FriendRepository --> friend --: saveAll()
+activate WorkerService
+WorkerService -> FriendController --++:
+FriendController -> FriendController : process response
+FriendController -> result --:go to view result
+@enduml

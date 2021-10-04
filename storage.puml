@@ -1,0 +1,48 @@
+@startuml
+class Friend{
+    - id: int
+    - first_name: String
+    - last_name: String
+    - groups: List<Group>
+    - updateDate: Date
+}
+note top: @Data\n@NoArgsConstructor\n@AllArgsConstructor
+
+class Group{
+    - id: int
+    - groupName: String
+    - activity: String
+    - screen_name: String
+}
+note top: @Data\n@NoArgsConstructor\n@AllArgsConstructor
+
+interface FriendRepository{
+
+}
+
+interface GroupRepository{
+
+}
+interface JpaRepository<T, ID>{
+
+}
+
+class Storage{
+    - groupRepository: GroupRepository
+    - friendRepository: FriendRepository
+
+    + getFriend(int id): Friend
+    + getAllFriends(): List<Friend>
+    + saveFriend(Friend friend): Friend
+    + saveAllFriends(List<Friend> friends): List<Friend>
+}
+
+class StorageApplication{
+    + {static}  main(String[] args): void
+}
+Storage o-- GroupRepository
+Storage o-- FriendRepository
+JpaRepository <|-- FriendRepository
+JpaRepository <|-- GroupRepository
+
+@enduml
