@@ -1,6 +1,6 @@
 "Find your ChatMate" App is an application that helps you to find a chatmate among your VK friends by chosen topic. For this application user must have a VK account. The application works on Google Cloud.
 
-Link to the app: 34.136.208.204:8080
+Link to the app: 34.136.208.204:8080 - link is not working anymore because of expired account on google cloud!
 
 Starting point of the program: https://github.com/feduuk/app/blob/d26a3012b03257f7ab728424794656858a967af0/web/src/main/java/com/web/HomeController.java#L11
 
