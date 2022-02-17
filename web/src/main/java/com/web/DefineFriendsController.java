@@ -4,10 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +20,7 @@ public class DefineFriendsController {
         return new Token();
     }
 
-    @PostMapping(value="/defineFriends")
+    @RequestMapping(value="/defineFriends", method = { RequestMethod.GET, RequestMethod.POST })
     public String defineFriends(Model model, @ModelAttribute("token") String token){
         log.info("defineFriends method of DefineFriendsController");
         log.info("my token is {}", token);
