@@ -1,7 +1,7 @@
 version: "3"
 services:
    web-1:
-      image: web
+      build: web/
       networks:
          - demonet-1
       ports:
@@ -9,7 +9,7 @@ services:
       depends_on:
          - storage-1
    storage-1:
-      image: storage
+      build: storage/
       networks:
          - demonet-1
       ports:
