@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -22,12 +23,12 @@ public class FriendController {
     @Autowired
     private WorkerService workerService;
 
-    @PostMapping("/info")
+    @RequestMapping(value="/info", method = { RequestMethod.GET, RequestMethod.POST })
     public String getInfo(FriendModel friendModel, Boolean actuality, Model model, HttpSession session) {
         log.info("getInfo method of FriendController");
         log.info("Activities were chosen: " + friendModel);
         boolean foundAtLeastOneChatmate = false;
-        String token = ((VkResponse)session.getAttribute("vkResponse")).getAccessToken();
+        String token = ((Token)session.getAttribute("token")).getToken();
         if(token == null){
             return "home";
         }
